@@ -20,6 +20,10 @@
     "web-vitals": "^2.0.1"
   },
   "scripts": {
+    "prepare": "husky install",
+    "precommit": "lint-staged",
+    "format": "prettier --write src/**/*.ts{,x}",
+    "lint": "tsc --noEmit && eslint src/**/*.ts{,x} --fix",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test"
