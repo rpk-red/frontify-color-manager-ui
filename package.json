@@ -60,6 +60,7 @@
     "@storybook/preset-create-react-app": "3.1.7",
     "@storybook/react": "6.2.9",
     "@types/lodash": "4.14.170",
+    "@types/react-router-dom": "^5.1.7",
     "@types/storybook-react-router": "1.0.1",
     "@typescript-eslint/eslint-plugin": "4.26.1",
     "@typescript-eslint/parser": "4.26.1",
