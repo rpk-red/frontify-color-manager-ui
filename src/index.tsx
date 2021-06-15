@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { ToastProvider } from "react-toast-notifications";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import App from "./App";
@@ -9,9 +10,11 @@ import "./index.css";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <App />
-    </Router>
+    <ToastProvider>
+      <Router>
+        <App />
+      </Router>
+    </ToastProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

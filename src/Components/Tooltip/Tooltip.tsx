@@ -8,20 +8,25 @@ const useStyles = makeStyles(
         position: "relative",
         display: "inline-block",
         borderBottom: "1px dotted black",
-        "&:hover": {
-          visibility: "visible",
-        },
       },
       tooltipText: {
+        top: "100%",
+        left: "50%",
+        marginLeft: "-60px",
         visibility: "hidden",
-        width: 120,
         backgroundColor: "black",
         color: "#fff",
         textAlign: "center",
         borderRadius: 6,
-        padding: "5px 0",
+        padding: "5px 10px",
         position: "absolute",
         zIndex: 1,
+        opacity: 0,
+        transition: "opacity 0.5s",
+        "&:hover": {
+          visibility: "visible",
+          opacity: 1,
+        },
       },
     }),
   {
@@ -33,7 +38,7 @@ export interface TooltipProps {
   /**
    * Tooltip reference element.
    */
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
   /**
    * Tooltip title. Zero-length titles string are never displayed.
    */
@@ -43,7 +48,7 @@ export interface TooltipProps {
 const Tooltip = ({ title, children }: TooltipProps): React.ReactElement => {
   const classes = useStyles();
   return (
-    <div className={classes.tooltip}>
+    <div className={classes.tooltip} title={title}>
       {children}
       <span className={classes.tooltipText}>{title}</span>
     </div>

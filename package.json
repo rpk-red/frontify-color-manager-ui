@@ -5,9 +5,9 @@
   "dependencies": {
     "@material-ui/styles": "^4.11.4",
     "@testing-library/jest-dom": "^5.14.1",
+    "@types/jest": "^26.0.23",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^13.1.9",
-    "@types/jest": "^26.0.23",
     "@types/node": "^15.12.2",
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.7",
@@ -19,6 +19,7 @@
     "react-dom": "^17.0.2",
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.3",
+    "react-toast-notifications": "^2.4.4",
     "typescript": "^4.3.2",
     "web-vitals": "^2.0.1"
   },
@@ -29,7 +30,9 @@
     "lint": "tsc --noEmit && eslint src/**/*.ts{,x} --fix",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "prettier": {
     "printWidth": 80,
