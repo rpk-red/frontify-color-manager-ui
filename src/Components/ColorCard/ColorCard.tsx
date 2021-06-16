@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/styles";
 import { Link, useRouteMatch } from "react-router-dom";
+import useFetch, { FetchMethodEnum } from "Hooks/useFetch";
+
+import { Button } from "Components";
+import { DELETE_COLOR } from "Constants";
 
 const useStyles = makeStyles(
   {
@@ -48,21 +52,44 @@ export interface ColorCardProps {
    * Callback fired when the card is clicked.
    */
   onClick: (id: number) => void;
+  /**
+   * Callback fired after delete button is clicked
+   */
+  afterDelete?: () => void;
 }
 
 const ColorCard = ({
-  onClick,
-  hexCode,
-  name,
   id,
+  name,
+  hexCode,
+  onClick,
+  afterDelete,
 }: ColorCardProps): React.ReactElement => {
   const classes = useStyles({ backgroundColor: hexCode });
   const { url } = useRouteMatch();
   const [isDeletable, setIsDeletable] = useState<boolean>(false);
 
+  const { executeFetch } = useFetch<Color>(null, {
+    skip: true,
+  });
+
+  const formatUrl = () => {
+    return DELETE_COLOR.replace(":colorId", id.toString());
+  };
+
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     e.preventDefault();
+    const deleteUrl = formatUrl();
+
+    executeFetch(deleteUrl, {
+      method: FetchMethodEnum.DELETE,
+      skip: false,
+    }).then(() => {
+      if (typeof afterDelete === "function") {
+        afterDelete();
+      }
+    });
   };
 
   return (
@@ -76,12 +103,16 @@ const ColorCard = ({
       <div className={classes.cardContainer} title={name} />
       <span>HEX: {hexCode}</span>&nbsp;&nbsp;
       {isDeletable && (
-        <button onClick={handleDelete} type="button">
+        <Button backgroundColor="#f47f64" onClick={handleDelete} type="button">
           Delete
-        </button>
+        </Button>
       )}
     </Link>
   );
+};
+
+ColorCard.defaultProps = {
+  afterDelete: undefined,
 };
 
 export default ColorCard;

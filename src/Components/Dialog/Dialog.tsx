@@ -94,9 +94,6 @@ const Dialog = ({
       >
         <dialog
           role="presentation"
-          // className={
-          //   className ? `${classes.dialog} ${className}` : classes.dialog
-          // }
           className={clsx(classes.dialog, {
             [className as string]: className != null,
           })}

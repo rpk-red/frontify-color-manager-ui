@@ -3,7 +3,8 @@ import { makeStyles } from "@material-ui/styles";
 import { Route, Link, useRouteMatch } from "react-router-dom";
 
 import { ColorCard, ColorDialog } from "Components";
-import { PATH_DIALOG_COLOR_CARD } from "Constants";
+import { GET_COLOR_ITEMS, PATH_DIALOG_COLOR_CARD } from "Constants";
+import useFetch, { FetchMethodEnum } from "Hooks/useFetch";
 
 const useStyles = makeStyles(
   {
@@ -12,6 +13,15 @@ const useStyles = makeStyles(
       display: "grid",
       gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
       gap: "1rem",
+    },
+    emptyGrid: {
+      margin: 100,
+      display: "grid",
+      placeItems: "center",
+    },
+    emptyParagraph: {
+      fontSize: 24,
+      color: "#c4cbd6",
     },
     actionBttn: {
       position: "fixed",
@@ -43,11 +53,6 @@ const useStyles = makeStyles(
   }
 );
 
-const mockColorList: Array<Color> = [
-  { id: 1, name: "azureRadiance", hexCode: "#0080ff" },
-  { id: 2, name: "crusta", hexCode: "#f47f64" },
-];
-
 const ColorDashboard = (): React.ReactElement => {
   const classes = useStyles();
   const { url } = useRouteMatch();
@@ -57,13 +62,36 @@ const ColorDashboard = (): React.ReactElement => {
 
   const resetCurrentColor = () => setCurrentColor(null);
 
+  const { data, refetch } = useFetch<Color[]>(GET_COLOR_ITEMS, {
+    method: FetchMethodEnum.GET,
+  });
+  const { get: colors } = data ?? {};
+
+  const onExiting = () => {
+    resetCurrentColor();
+    refetch();
+  };
+
   return (
     <>
-      <div className={classes.grid}>
-        {mockColorList.map((colorEl) => (
-          <ColorCard key={colorEl.id} {...colorEl} onClick={handleCardClick} />
-        ))}
-      </div>
+      {colors ? (
+        <div className={classes.grid}>
+          {colors.map((colorEl) => (
+            <ColorCard
+              key={colorEl.id}
+              {...colorEl}
+              onClick={handleCardClick}
+              afterDelete={refetch}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className={classes.emptyGrid}>
+          <p className={classes.emptyParagraph}>
+            No elements to display, please add some.
+          </p>
+        </div>
+      )}
       <Link to={`${url}/color`} className={classes.link}>
         <button type="button" className={classes.actionBttn}>
           +
@@ -73,8 +101,8 @@ const ColorDashboard = (): React.ReactElement => {
         path={`${url}/${PATH_DIALOG_COLOR_CARD}`}
         component={() => (
           <ColorDialog
-            onExiting={resetCurrentColor}
-            color={mockColorList.find((e) => e.id === currentColor)}
+            onExiting={onExiting}
+            initColor={colors?.find((e) => e.id === currentColor)}
           />
         )}
       />

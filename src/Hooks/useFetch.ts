@@ -66,6 +66,7 @@ const generateOptions = (
 ): Record<string, unknown> => {
   const options = {
     [GET]: {
+      Accept: "application/json",
       method: GET,
     },
     [POST]: {
@@ -171,6 +172,7 @@ export function useFetch<G = undefined, P = undefined>(
           fetchOptions
         );
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let result: any = null;
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.indexOf("application/json") !== -1) {
