@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/styles";
 import { Route, Link, useRouteMatch } from "react-router-dom";
 
@@ -56,11 +56,6 @@ const useStyles = makeStyles(
 const ColorDashboard = (): React.ReactElement => {
   const classes = useStyles();
   const { url } = useRouteMatch();
-  const [currentColor, setCurrentColor] = useState<NullableNumer>(null);
-
-  const handleCardClick = (id: number) => setCurrentColor(id);
-
-  const resetCurrentColor = () => setCurrentColor(null);
 
   const { data, refetch } = useFetch<Color[]>(GET_COLOR_ITEMS, {
     method: FetchMethodEnum.GET,
@@ -68,7 +63,6 @@ const ColorDashboard = (): React.ReactElement => {
   const { get: colors } = data ?? {};
 
   const onExiting = () => {
-    resetCurrentColor();
     refetch();
   };
 
@@ -77,12 +71,7 @@ const ColorDashboard = (): React.ReactElement => {
       {colors ? (
         <div className={classes.grid}>
           {colors.map((colorEl) => (
-            <ColorCard
-              key={colorEl.id}
-              {...colorEl}
-              onClick={handleCardClick}
-              afterDelete={refetch}
-            />
+            <ColorCard key={colorEl.id} {...colorEl} afterDelete={refetch} />
           ))}
         </div>
       ) : (
@@ -99,12 +88,7 @@ const ColorDashboard = (): React.ReactElement => {
       </Link>
       <Route
         path={`${url}/${PATH_DIALOG_COLOR_CARD}`}
-        component={() => (
-          <ColorDialog
-            onExiting={onExiting}
-            initColor={colors?.find((e) => e.id === currentColor)}
-          />
-        )}
+        component={() => <ColorDialog onExiting={onExiting} />}
       />
     </>
   );

@@ -1,9 +1,14 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/styles";
 
 import { Dialog } from "Components";
-import { ADD_COLOR, EMPTY_STRING, UPDATE_COLOR } from "Constants";
+import {
+  ADD_COLOR,
+  EMPTY_STRING,
+  GET_COLOR_ITEM,
+  UPDATE_COLOR,
+} from "Constants";
 import useFetch, { FetchMethodEnum } from "Hooks/useFetch";
 import Button from "Components/Button";
 
@@ -38,15 +43,10 @@ interface ColorDialogStyleProps {
 }
 
 export interface ColorDialogParams {
-  colorId: string;
+  colorId?: string;
 }
 
 export interface ColorDialogProps {
-  /**
-   * Initial color object used in edit mode
-   * @type Color
-   */
-  initColor?: Color;
   /**
    * Callback fired when dialog starts closing
    */
@@ -55,19 +55,33 @@ export interface ColorDialogProps {
 
 const hexRegex = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
 
-const ColorDialog = ({
-  initColor,
-  onExiting,
-}: ColorDialogProps): React.ReactElement => {
-  const [name, setName] = useState<NullableString>(initColor?.name ?? null);
-  const [hex, setHex] = useState<NullableString>(initColor?.hexCode ?? null);
+const ColorDialog = ({ onExiting }: ColorDialogProps): React.ReactElement => {
+  const [name, setName] = useState<NullableString>(null);
+  const [hex, setHex] = useState<NullableString>(null);
   const { goBack } = useHistory();
+  const { colorId } = useParams<ColorDialogParams>();
 
   const classes = useStyles({ backgroundColor: hex });
 
-  const { executeFetch } = useFetch<Color>(null, {
-    skip: true,
+  const formatGetColorUrl = () => {
+    return GET_COLOR_ITEM.replace(":colorId", colorId ?? EMPTY_STRING);
+  };
+
+  const getColorUrl = formatGetColorUrl();
+
+  const { data, executeFetch } = useFetch<Color>(getColorUrl, {
+    method: FetchMethodEnum.GET,
+    skip: colorId == null,
   });
+
+  const { get: initColor } = data ?? {};
+
+  useEffect(() => {
+    if (initColor) {
+      setName(initColor.name);
+      setHex(initColor.hexCode);
+    }
+  }, [initColor]);
 
   const formatUrl = () => {
     return initColor

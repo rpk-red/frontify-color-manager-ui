@@ -49,10 +49,6 @@ export interface ColorCardProps {
    */
   hexCode: ColorHEX;
   /**
-   * Callback fired when the card is clicked.
-   */
-  onClick: (id: number) => void;
-  /**
    * Callback fired after delete button is clicked
    */
   afterDelete?: () => void;
@@ -62,7 +58,6 @@ const ColorCard = ({
   id,
   name,
   hexCode,
-  onClick,
   afterDelete,
 }: ColorCardProps): React.ReactElement => {
   const classes = useStyles({ backgroundColor: hexCode });
@@ -96,7 +91,6 @@ const ColorCard = ({
     <Link
       to={`${url}/color/${id}`}
       className={classes.cardLink}
-      onClick={() => onClick(id)}
       onMouseEnter={() => setIsDeletable(true)}
       onMouseLeave={() => setIsDeletable(false)}
     >
