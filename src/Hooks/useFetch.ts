@@ -16,8 +16,7 @@ export const ERROR_MSG_INVALID_DATA =
 export const ERROR_MSG_NOT_AUTHORIZED =
   "You are not authorized to see this content";
 export const ERROR_MSG_NOT_FOUND = "Resource not found";
-export const ERROR_MSG_500 =
-  "Ooops! Something went wrong, please contact support.amsterdam@groupm.com";
+export const ERROR_MSG_500 = "Ooops! Something went wrong";
 export const ERROR_MSG_SERVICE = "Service is not available";
 // #endregion
 
