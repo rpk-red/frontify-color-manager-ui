@@ -68,7 +68,7 @@ const ColorDashboard = (): React.ReactElement => {
 
   return (
     <>
-      {colors ? (
+      {colors && colors.length !== 0 ? (
         <div className={classes.grid}>
           {colors.map((colorEl) => (
             <ColorCard key={colorEl.id} {...colorEl} afterDelete={refetch} />
